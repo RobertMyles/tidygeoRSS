@@ -13,3 +13,17 @@ rmtags <- function(html) {
 strip_html <- function(s) {
   html_text(read_html(s))
 }
+# remove all NA columns
+no_na <- function(x) all(!is.na(x))
+# remove nchar < 1 columns
+no_empty_char <- function(x) all(!nchar(x) < 1)
+# check for multiple elements, reduce and check if NA for map_if
+check_p <- function(x) {
+  z <- unique(x)
+  if (length(z) > 1) {
+    ret <- all(!is.na(z))
+  } else {
+    ret <- !is.na(z)
+  }
+  ret
+}

@@ -1,4 +1,4 @@
-geo_atom_parse <- function(response, feed, type, clean_tags) {
+geo_atom_parse <- function(response, feed, clean_tags) {
   res <- read_xml(response)
   geocheck <- grepl("http://www.georss.org/georss", 
                     xml_attr(res, "xmlns:georss"))
@@ -45,7 +45,40 @@ geo_atom_parse <- function(response, feed, type, clean_tags) {
       entry_content = safe_run(res_entry, "all", "//*[name()='content']"),
       entry_link = ifelse(!is.null(e_link), e_link, def),
       entry_summary = safe_run(res_entry, "all", "//*[name()='summary']"),
-      entry_category = list(NA)
+      entry_category = list(NA),
+      entry_latlon = safe_run(res_entry, "all", "//*[name()='georss:point']") %>% 
+        map_if(.p = ~{!is.na(.x)}, ~{
+          x1 <- str_before_first(.x, " ") %>% as.numeric()
+          x2 <- str_after_first(.x, " ") %>% as.numeric()
+          x <- c(x1, x2)
+          x
+        }) %>% map_if(.p = ~{
+          check_p(.x)
+          }, st_point),
+      entry_line = safe_run(res_entry, "all", "//*[name()='georss:line']") %>% 
+        map_if(.p = ~{!is.na(.x)}, ~{
+          wspaces <- stringr::str_count(.x, " ") + 1
+          w_len <- wspaces/2
+          geomatrix <- matrix(nrow = wspaces/2, ncol = 2)
+          for (i in 1:w_len) {
+            geomatrix[i, 1] <- str_before_first(.x, " ") %>% as.numeric()
+            .x <- str_after_first(.x, " ")
+            if (i < w_len) {
+              geomatrix[i, 2] <- str_before_first(.x, " ") %>% as.numeric()
+              .x <- str_after_first(.x, " ")
+            } else {
+              geomatrix[i, 2] <- .x %>% as.numeric()
+            }
+          }
+          geomatrix
+        }) %>% map_if(.p = ~{
+          check_p(.x)
+          }, st_linestring),
+      entry_pgon = safe_run(res_entry, "all", "//*[name()='georss:ploygon']"),
+      entry_bbox = safe_run(res_entry, "all", "//*[name()='georss:box']"),
+      entry_elev = safe_run(res_entry, "all", "//*[name()='georss:elev']"),
+      entry_floor = safe_run(res_entry, "all", "//*[name()='georss:floor']"),
+      entry_radius = safe_run(res_entry, "all", "//*[name()='georss:radius']")
       ) 
     
     for (i in 1:length(res_entry)) {
@@ -74,6 +107,7 @@ geo_atom_parse <- function(response, feed, type, clean_tags) {
                                  entry_content)
         )
     }
+    
     return(entries)
   } else {
     stop(msg)
