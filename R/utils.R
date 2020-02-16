@@ -5,11 +5,7 @@ msg <- "This does not appear to be a valid *geo* feed.
   Please check the feed or open an issue at:
   https://github.com/RobertMyles/tidygeoRSS/issues"
 # clean HTML tags
-# adapted from https://stackoverflow.com/a/17227415/4296028
-rmtags <- function(html) {
-  return(gsub("<.*?>", " ", html))
-}
-# safer: https://stackoverflow.com/a/34344957/4296028
+# from: https://stackoverflow.com/a/34344957/4296028
 strip_html <- function(s) {
   html_text(read_html(s))
 }
@@ -17,7 +13,7 @@ strip_html <- function(s) {
 no_na <- function(x) all(!is.na(x))
 # remove nchar < 1 columns
 no_empty_char <- function(x) all(!nchar(x) < 1)
-# check for multiple elements, reduce and check if NA for map_if
+# check for multiple elements, reduce and check if !NA for map_if
 check_p <- function(x) {
   z <- unique(x)
   if (length(z) > 1) {

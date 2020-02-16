@@ -7,12 +7,15 @@
 #' @importFrom stringr str_extract
 #' @importFrom strex str_before_first str_after_first
 #' @importFrom httr GET user_agent
-#' @importFrom sf read_sf st_point st_linestring
+#' @importFrom sf read_sf st_point st_linestring st_polygon st_bbox
 #' @importFrom jsonlite parse_json
 #' @importFrom rvest html_text
 #' @importFrom magrittr "%>%"
+#' @param clean_tags default \code{TRUE}. Clean HTML tags from summary and content?
+#' @param list default \code{FALSE}. Return metadata and entry information in separate dataframes?
+#' These will be combined in a list.
 #' @export
-tidygeo <- function(feed, config = list(), clean_tags = TRUE) {
+tidygeo <- function(feed, config = list(), clean_tags = TRUE, list = FALSE) {
   # checks
   if (!clean_tags %in% c(TRUE, FALSE)) {
     stop("`clean_tags` may be TRUE or FALSE only.")
