@@ -15,7 +15,9 @@ Imports: xml2 (>= 1.2.0),
     httr(>= 1.4.0),
     lubridate (>= 1.7.0),
     dplyr (>= 0.8.0)
-Suggests: knitr,
-    rmarkdown
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 2.1.0)
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
