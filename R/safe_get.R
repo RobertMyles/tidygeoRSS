@@ -10,7 +10,7 @@ safe_get <- function(feed, user = NULL, config = list()) {
   if (status != 200L) {
     stop("Attempt to get feed was unsuccessful (non-200 response). Feed may not be available.")
   } else {
-    message("GET request successful. Parsing...")
+    message("GET request successful. Parsing...\n")
   }
   result <- req$result
   return(result)

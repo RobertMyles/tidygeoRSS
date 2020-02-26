@@ -1,4 +1,4 @@
-geo_atom_parse <- function(response, feed, clean_tags) {
+geo_atom_parse <- function(response, list, clean_tags) {
   res <- read_xml(response)
   geocheck <- grepl(
     "http://www.georss.org/georss",
@@ -43,6 +43,8 @@ geo_atom_parse <- function(response, feed, clean_tags) {
       entry_link = ifelse(!is.null(e_link), e_link, def),
       entry_summary = safe_run(res_entry, "all", "//*[name()='summary']"),
       entry_category = list(NA),
+      entry_published = safe_run(res_entry, "all", "//*[name()='published']"),
+      entry_rights = safe_run(res_entry, "all", "//*[name()='rights']"),
       entry_latlon = safe_run(
         res_entry, "all", "//*[name()='georss:point']"
       ) %>%
@@ -155,27 +157,15 @@ geo_atom_parse <- function(response, feed, clean_tags) {
         map("label") %>%
         compact()
     }
+    
+    meta <- clean_up(meta, "atom", clean_tags)
+    entries <- clean_up(entries, "atom", clean_tags)
 
-    if (clean_tags) {
-      entries <- entries %>%
-        mutate(
-          entry_summary = ifelse(!is.na(entry_summary),
-            strip_html(entry_summary),
-            entry_summary
-          ),
-          entry_content = ifelse(!is.na(entry_content),
-            strip_html(entry_content),
-            entry_content
-          )
-        )
-    }
-    if (list) {
+    if (isTRUE(list)) {
       result <- list(meta = meta, entries = entries)
     } else {
       entries$feed_title <- meta$feed_title
-      result <- suppressMessages(
-        full_join(meta, entries)
-      )
+      result <- suppressMessages(full_join(meta, entries))
     }
     return(result)
   } else {

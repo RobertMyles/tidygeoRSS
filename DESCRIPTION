@@ -4,18 +4,22 @@ Title: Tidy geo-RSS for R
 Version: 0.0.1
 Author: Robert Myles McDonnell
 Maintainer: Robert Myles McDonnell <robertmylesmcdonnell@gmail.com>
-Description:
-    'tidygeoRSS' parses geo-RSS feedsand returns tidy data frames.
+Description: 
+    'tidygeoRSS' parses geo-RSS feeds and returns tidy simple features 
+    data frames.
 URL: https://github.com/RobertMyles/tidygeoRSS
 BugReports: https://github.com/RobertMyles/tidygeoRSS/issues
 Encoding: UTF-8
 License: MIT + file LICENSE
 Depends: R (>= 3.1.0)
 Imports: xml2 (>= 1.2.0),
-    httr(>= 1.4.0),
-    lubridate (>= 1.7.0),
-    dplyr (>= 0.8.0)
+    httr (>= 1.4.0),
+    anytime (>= 0.3.0),
+    dplyr (>= 0.8.0),
+    tidyRSS (>= 2.0.0),
+    sf (>= 0.8.0)
 Suggests: 
+    httptest,
     knitr,
     rmarkdown,
     testthat (>= 2.1.0)

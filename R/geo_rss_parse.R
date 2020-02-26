@@ -1,94 +1,177 @@
-# geo_rss_parse <- function(response, feed, type) {
-#   res <- read_xml(response)
-#   geocheck <- grepl("http://www.georss.org/georss", 
-#                     xml_attr(res, "xmlns:georss"))
-#   if (geocheck) {
-#     # parse
-#     # check RSS geo spec
-#   } else {
-#     stop(msg)
-#   }
-# }
-# 
-# 
-# 
-# 
-# # res <- read_xml(response_atom)
-# 
-# geo_parse <- function(response){
-#   d <- response
-#   d <- xml_contents(d) %>% as_list()
-#   d2 <- response
-#   
-#   # meta attributes:
-#   link <- attributes(d[[1]]$link)[1] %>% unlist()
-#   names(link) <- NULL
-#   meta <- tibble(
-#     temp = "geo",
-#     feed_title = map(d, "title", .default = NA_character_) %>% unlist(),
-#     feed_author = map(d, "author", .default = NA_character_) %>% unlist(),
-#     feed_description = map(d, "description", .default = NA_character_) %>% unlist(),
-#     feed_last_updated = map(d, "pubDate", .default = NA_character_) %>% unlist() %>%
-#       parse_date_time(orders = formats),
-#     feed_language = map(d, "language", .default = NA_character_) %>% unlist(),
-#     link = map(d, "link", .default = NA_character_) %>% unlist()
-#   )
-#   
-#   if(!is.null(link)) meta$link <- link
-#   
-#   # items:
-#   items <- d2 %>% xml_find_all("channel") %>% xml_find_all("item") %>%
-#     as_list()
-#   
-#   if(length(items) < 1) {
-#     items <- d2 %>% xml_contents() %>% as_list()
-#   }
-#   
-#   item <- tibble(
-#     temp = "geo",
-#     item_title = map(items, "title", .default = NA_character_) %>% unlist(),
-#     item_date_updated = map(items, "pubDate", .default = NA_character_) %>%
-#       unlist() %>% parse_date_time(orders = formats),
-#     item_content = map(items, "description", .default = NA_character_) %>%
-#       unlist() %>% str_trim(),
-#     item_link = map(items, "link", .default = NA_character_) %>% unlist(),
-#     item_long = map(items, "long", .default = NA_character_) %>%
-#       unlist() %>% as.numeric(),
-#     item_lat = map(items, "lat", .default = NA_character_) %>%
-#       unlist() %>% as.numeric()
-#   )
-#   
-#   item_d_updated <- unique(item$item_date_updated)
-#   
-#   if(all(is.na(item_d_updated))){
-#     date_check <- grepl("date", names(items[[1]]))
-#     if(any(date_check == TRUE)){
-#       item$item_date_updated <- map(items, "date", .default = NA_character_) %>%
-#         unlist() %>% parse_date_time(orders = formats)
-#     }
-#   }
-#   
-#   item_1_long <- unique(item$item_long)
-#   
-#   if(all(is.na(item_1_long))){
-#     geo <- map(items, "point", .default = NA_character_) %>% unlist()
-#     long <- str_extract(geo, "\\s[0-9\\.-]*") %>% trimws() %>% as.numeric()
-#     lat <- str_extract(geo, "[0-9\\.-]*\\s") %>% trimws() %>% as.numeric()
-#     item$item_long <- long
-#     item$item_lat <- lat
-#     
-#     item_2_long <- unique(item$item_long)
-#     
-#     if(all(is.na(item_2_long))){
-#       geo <- map(items, "georss:point", .default = NA_character_) %>% unlist()
-#       long <- str_extract(geo, "\\s[0-9\\.-]*") %>% trimws() %>% as.numeric()
-#       lat <- str_extract(geo, "[0-9\\.-]*\\s") %>% trimws() %>% as.numeric()
-#       item$item_long <- long
-#       item$item_lat <- lat
-#     }
-#   }
-#   
-#   suppressMessages(result <- full_join(meta, item))
-#   result <- result %>% select(-temp)
-#   return(result)
-# }
+geo_rss_parse <- function(response, list, clean_tags) {
+  res <- response %>% read_xml()
+  geocheck <- grepl(
+    "http://www.georss.org/georss",
+    xml_attr(res, "xmlns:georss")
+  )
+  if (isTRUE(geocheck)) {
+    channel <- xml_find_first(res, "//*[name()='channel']")
+    # meta data. Necessary: title, link, description
+    metadata <- tibble(
+      feed_title = xml_find_first(channel, "//*[name()='title']") %>% xml_text(),
+      feed_link = xml_find_first(channel, "//*[name()='link']") %>% xml_text(),
+      feed_description = xml_find_first(channel, "//*[name()='description']") %>%
+        xml_text()
+    )
+    # optional metadata: language, copyright, managingEditor, webMaster, pubDate,
+    # lastBuildDate; category, generator, docs, cloud, ttl, image, textInput,
+    # skipHours, skipDays
+    meta_optional <- tibble(
+      feed_language = safe_run(channel, "first", "//*[name()='language']"),
+      feed_managing_editor = safe_run(
+        channel,
+        "first", "//*[name()='managingEditor']"
+      ),
+      feed_web_master = safe_run(channel, "first", "//*[name()='webMaster']"),
+      feed_pub_date = safe_run(channel, "first", "//*[name()='pubDate']"),
+      feed_last_build_date = safe_run(
+        channel,
+        "first", "//*[name()='lastBuildDate']"
+      ),
+      feed_category = list(category = safe_run(
+        channel, "first", "//*[name()='category']"
+      )),
+      feed_generator = safe_run(channel, "first", "//*[name()='generator']"),
+      feed_docs = safe_run(channel, "first", "//*[name()='docs']"),
+      feed_ttl = safe_run(channel, "first", "//*[name()='ttl']")
+    )
+    meta <- bind_cols(metadata, meta_optional)
+
+    # entries
+    # necessary: title or description
+    res_entry <- xml_find_all(channel, "//*[name()='item']") %>% as_list()
+    res_entry_xml <- xml_find_all(channel, "//*[name()='item']")
+
+    entries <- tibble(
+      item_title = map(res_entry, "title", .default = def) %>% unlist(),
+      item_link = map(res_entry, "link", .default = def) %>% unlist(),
+      item_description = map(res_entry, "description", .default = def) %>%
+        unlist(),
+      item_pub_date = map(res_entry, "pubDate", .default = def) %>% unlist(),
+      item_guid = map(res_entry, "guid", .default = def) %>% unlist(),
+      item_author = map(res_entry, "author", .default = def),
+      item_category = map(res_entry_xml, ~ {
+        xml_find_all(.x, "category") %>% map(xml_text)
+      }),
+      item_comments = map(res_entry, "comments", .default = def) %>% unlist()
+    ) %>%
+      # add geo information
+      mutate(
+        item_latlon = safe_run(
+          res_entry_xml, "all", "//*[name()='georss:point']"
+        ) %>%
+          map_if(
+            .p = ~ {
+              !is.na(.x)
+            },
+            ~ {
+              # take out elements of character vector, join together
+              # transform into POINT
+              x1 <- str_before_first(.x, " ") %>% as.numeric()
+              x2 <- str_after_first(.x, " ") %>% as.numeric()
+              x <- c(x1, x2)
+              x
+            }
+          ) %>%
+          map_if(.p = ~ {
+            check_p(.x)
+          }, st_point),
+        item_line = safe_run(res_entry_xml, "all", "//*[name()='georss:line']") %>%
+          map_if(.p = ~ {
+            !is.na(.x)
+          }, ~ {
+            # count how many elements, create matrix of (elements/2)*2
+            # place pairs in matrix
+            # matrix becomes LINESTRING
+            wspaces <- stringr::str_count(.x, " ") + 1
+            w_len <- wspaces / 2
+            geomatrix <- matrix(nrow = wspaces / 2, ncol = 2)
+            for (i in 1:w_len) {
+              geomatrix[i, 1] <- str_before_first(.x, " ") %>% as.numeric()
+              .x <- str_after_first(.x, " ")
+              if (i < w_len) {
+                geomatrix[i, 2] <- str_before_first(.x, " ") %>% as.numeric()
+                .x <- str_after_first(.x, " ")
+              } else {
+                geomatrix[i, 2] <- .x %>% as.numeric()
+              }
+            }
+            geomatrix
+          }) %>%
+          map_if(.p = ~ {
+            check_p(.x)
+          }, st_linestring),
+        item_pgon = safe_run(
+          res_entry_xml, "all", "//*[name()='georss:ploygon']"
+        ) %>%
+          map_if(.p = ~ {
+            !is.na(.x)
+          }, ~ {
+            # same as LINETSRING, except input is list
+            wspaces <- stringr::str_count(.x, " ") + 1
+            w_len <- wspaces / 2
+            geomatrix <- matrix(nrow = wspaces / 2, ncol = 2)
+            for (i in 1:w_len) {
+              geomatrix[i, 1] <- str_before_first(.x, " ") %>% as.numeric()
+              .x <- str_after_first(.x, " ")
+              if (i < w_len) {
+                geomatrix[i, 2] <- str_before_first(.x, " ") %>% as.numeric()
+                .x <- str_after_first(.x, " ")
+              } else {
+                geomatrix[i, 2] <- .x %>% as.numeric()
+              }
+            }
+            list(geomatrix)
+          }) %>%
+          map_if(.p = ~ {
+            check_p(.x)
+          }, st_polygon),
+        item_bbox = safe_run(res_entry_xml, "all", "//*[name()='georss:box']") %>%
+          map_if(.p = ~ {
+            !is.na(.x)
+          }, ~ {
+            # get first pair, create POINT
+            b1 <- str_before_first(y, " ") %>% as.numeric()
+            b2 <- str_after_first(y, " ") %>%
+              str_before_first(" ") %>%
+              as.numeric()
+            b12 <- c(b1, b2) %>% st_point()
+            # second pair
+            b3 <- str_after_nth(y, " ", 2) %>%
+              str_before_first(" ") %>%
+              as.numeric()
+            b4 <- str_after_nth(y, " ", 3) %>% as.numeric()
+            b34 <- c(b3, b4) %>% st_point()
+            # join and make BBOX
+            x <- c(b12, b34)
+            x
+          }) %>%
+          map_if(.p = ~ {
+            check_p(.x)
+          }, st_bbox),
+        item_elev = safe_run(res_entry_xml, "all", "//*[name()='georss:elev']") %>%
+          as.numeric(),
+        item_floor = safe_run(res_entry_xml, "all", "//*[name()='georss:floor']") %>%
+          as.numeric(),
+        item_radius = safe_run(
+          res_entry_xml, "all", "//*[name()='georss:radius']"
+        ) %>% as.numeric()
+      )
+    
+    # clean up
+    meta <- clean_up(meta, "rss", clean_tags)
+    entries <- clean_up(entries, "rss", clean_tags)
+    
+    if (isTRUE(list)) {
+      result <- list(meta = meta, entries = entries)
+    } else {
+      entries$feed_title <- meta$feed_title
+      result <- suppressMessages(
+        full_join(meta, entries)
+      )
+    }
+    return(result)
+  } else {
+    stop(msg)
+  }
+}

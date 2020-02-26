@@ -1,13 +1,21 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidygeoRSS
+# tidygeoRSS 🌎 🌍 🌏
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-The goal of tidygeoRSS is to …
+The idea of tidygeoRSS is to parse ‘geo’ feeds – RSS, Atom and JSON –
+and return them as tibbles complete with the geographical information in
+a way that is compatible with the
+[sf](https://r-spatial.github.io/sf/articles/sf1.html) library.
+
+For more information on these formats, see:
+
+  - geo-RSS & geo-Atom: <http://www.georss.org/>  
+  - geoJSON: <https://geojson.org/>
 
 ## Installation
 
@@ -21,15 +29,13 @@ install.packages("tidygeoRSS")
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("RobertMyles/tidygeoRSS")
+# install.packages("remotes")
+remotes::install_github("RobertMyles/tidygeoRSS")
 ```
 
-## Example
+### Installing sf
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(tidygeoRSS)
-## basic example code
-```
+tidygeoRSS relies on sf, which also relies on some system dependencies,
+so you will most likely have to install certain things before using
+tidygeoRSS. More information is available
+[here](https://r-spatial.github.io/sf/index.html#installing).
