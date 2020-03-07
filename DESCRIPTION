@@ -16,7 +16,7 @@ Imports: xml2 (>= 1.2.0),
     httr (>= 1.4.0),
     anytime (>= 0.3.0),
     dplyr (>= 0.8.0),
-    tidyRSS (>= 2.0.0),
+    tidyRSS (>= 2.0.1),
     sf (>= 0.8.0)
 Suggests: 
     httptest,
