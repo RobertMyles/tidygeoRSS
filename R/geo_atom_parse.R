@@ -1,10 +1,7 @@
-geo_atom_parse <- function(response, list, clean_tags) {
+geo_atom_parse <- function(response, list, clean_tags, parse_dates) {
   res <- read_xml(response)
-  geocheck <- grepl(
-    "http://www.georss.org/georss",
-    xml_attr(res, "xmlns:georss")
-  )
-  if (geocheck) {
+  
+  if (geocheck(res)) {
     # parse
     # check Atom spec
     # metadata: id, title, updated necessary
@@ -158,8 +155,8 @@ geo_atom_parse <- function(response, list, clean_tags) {
         compact()
     }
     
-    meta <- clean_up(meta, "atom", clean_tags)
-    entries <- clean_up(entries, "atom", clean_tags)
+    meta <- clean_up(meta, "atom", clean_tags, parse_dates)
+    entries <- clean_up(entries, "atom", clean_tags, parse_dates)
 
     if (isTRUE(list)) {
       result <- list(meta = meta, entries = entries)

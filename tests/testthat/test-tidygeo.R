@@ -13,8 +13,8 @@ test_that("check_p works", {
   expect_equal(check_p(c(NA, "NA")), FALSE)
   expect_equal(check_p(c("NA", "NA")), TRUE)
 })
-# type_check.R
-# use mocking
-test_that("type check returns correctly", {
-  expect_equal()type_check
-})
+# # type_check.R
+# # use mocking
+# test_that("type check returns correctly", {
+#   expect_equal()type_check
+# })

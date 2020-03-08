@@ -33,6 +33,7 @@ delist <- function(x) {
   if (length(z) == 0) z <- NA_character_
   z
 }
+
 # parse dates
 date_parser <- function(df, kol) {
   column <- enquo(kol) %>% as_name()
@@ -62,5 +63,25 @@ set_user <- function(config) {
     return(ua)
   } else {
     return(config)
+  }
+}
+
+# check these are 'geo' feeds
+geocheck <- function(x) {
+  point <- xml_find_all(x, "//*[name()='georss:point']") %>% length()
+  line <- xml_find_all(x, "//*[name()='georss:line']") %>% length()
+  polygon <- xml_find_all(x, "//*[name()='georss:polygon']") %>% length()
+  box <- xml_find_all(x, "//*[name()='georss:box']") %>% length()
+  f_type <- xml_find_all(x, "//*[name()='georss:featuretypetag']") %>% length()
+  r_tag <- xml_find_all(x, "//*[name()='georss:relationshiptag']") %>% length()
+  f_name <- xml_find_all(x, "//*[name()='georss:featurename']") %>% length()
+  geo_elements <- c(point, line, polygon, box, f_type, r_tag, f_name)
+  
+  if (all(geo_elements < 1)) {
+    message("This feed does not appear to contain geographic information. 
+If you are sure that it is a 'geo' type feed, please open an issue at:
+https://github.com/RobertMyles/tidygeoRSS/issues")
+  } else {
+    return(TRUE)
   }
 }
