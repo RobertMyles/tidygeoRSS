@@ -3,9 +3,7 @@
 
 # tidygeoRSS 🌎 🌍 🌏
 
-<!-- badges: start -->
-
-<!-- badges: end -->
+![R-CMD-check](https://github.com/RobertMyles/tidygeoRSS/workflows/R-CMD-check/badge.svg)
 
 The idea of tidygeoRSS is to parse ‘geo’ feeds – RSS, Atom and JSON –
 and return them as tibbles complete with the geographical information in
