@@ -6,11 +6,17 @@
 # - HTML tags are removed
 # - list-columns of length 1 are unlisted
 clean_up <- function(df, type, clean_tags, parse_dates) {
-  # unlist list-cols of length 1
-  df <- df %>% mutate_if(is.list, delist)
+  # remove lists of length 1
+  dflistcols <- df %>% select_if(is.list)
+  if (ncol(dflistcols) > 0) {
+    for (i in 1:ncol(dflistcols)) {
+      kolnm <- colnames(dflistcols)[i]
+      df[, kolnm] <- delist(dflistcols, kolnm)
+    }
+  }
   # remove empty and NA cols
  df <- df %>%
-  map_df(~ {ifelse(is.character(.x) & nchar(.x) == 0, NA_character_, .x)}) %>%
+  mutate(dplyr::across(is.character, ~{ifelse(nchar(.x) == 0, NA_character_, .x)})) %>%
   keep(~ {
     !all(is.na(.x))
   })

@@ -3,3 +3,16 @@
 ^README\.Rmd$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.travis\.yml$
+^README\.Rmd$
+^README-.*\.png$
+^cran-comments\.md$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^CRAN-RELEASE$
+^test$
+^codecov\.yml$
+^\.github$
+^\.github/workflows/rcheck\.yaml$
+^\.github/workflows/buildsite\.yaml$

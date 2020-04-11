@@ -1,3 +1,6 @@
+# tidyRSS unexported functions
+atom_parse <- getFromNamespace("atom_parse", "tidyRSS")
+rss_parse <- getFromNamespace("rss_parse", "tidyRSS")
 # default value for empty elements
 def <- NA_character_
 # stop() message
@@ -13,7 +16,10 @@ error_msg <- "Error in feed parse; please check URL.\n
 # from https://stackoverflow.com/a/17227415/4296028
 # removal != parsing!
 cleanFun <- function(htmlString) {
-  return(gsub("<.*?>", "", htmlString))
+  ht <- gsub("<.*?>", "", htmlString)
+  ret <- gsub("[\n\t]", "", ht)
+  ret <- trimws(ret)
+  return(ret)
 }
 # check for multiple elements, reduce and check if !NA for map_if
 check_p <- function(x) {
@@ -26,14 +32,18 @@ check_p <- function(x) {
   ret
 }
 # delist list-columns of one element
-delist <- function(x) {
-  safe_compact <- safely(compact)
-  y <- safe_compact(x)
-  if (is.null(y$error)) z <- y$result else z <- NA
-  if (length(z) == 0) z <- NA_character_
-  z
+delist <- function (df, listcol) {
+  nn <- nrow(df)
+  y <- vector("numeric", nn)
+  for (i in 1:nn) {
+    y[[i]] <- df[[get("listcol")]][[i]] %>% length()
+  }
+  if (all(y == 1)) {
+    df[[get("listcol")]] <- unlist(df[[get("listcol")]])
+  }
+  df <- df[, get("listcol")]
+  df
 }
-
 # parse dates
 date_parser <- function(df, kol) {
   column <- enquo(kol) %>% as_name()
@@ -85,3 +95,5 @@ https://github.com/RobertMyles/tidygeoRSS/issues")
     return(TRUE)
   }
 }
+
+safe_join <- safely(full_join)

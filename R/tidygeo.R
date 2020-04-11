@@ -8,11 +8,12 @@
 #' @importFrom stringr str_extract
 #' @importFrom strex str_before_first str_after_first
 #' @importFrom httr GET user_agent
-#' @importFrom sf read_sf st_point st_linestring st_polygon st_bbox
+#' @importFrom sf read_sf st_point st_linestring st_polygon st_bbox st_as_sf
 #' @importFrom jsonlite parse_json
 #' @importFrom rlang has_name as_name enquo
 #' @importFrom magrittr "%>%"
 #' @import tidyRSS
+#' @importFrom utils getFromNamespace
 #' @param feed \code{character}, the url for the feed that you want to parse,
 #' e.g. "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom".
 #' @param config Arguments passed off to \code{httr::GET()}.
@@ -37,6 +38,7 @@ tidygeo <- function(feed, config = list(), clean_tags = TRUE, list = FALSE,
   if (!is.logical(clean_tags)) stop("`clean_tags` may be FALSE or TRUE only.")
   if (!is.list(config)) stop("`config` should be a list only.")
   if (!is.logical(parse_dates)) stop("`parse_dates` may be FALSE or TRUE only.")
+  feed <- trimws(feed)
   
   # send user agent
   ua <- set_user(config)
