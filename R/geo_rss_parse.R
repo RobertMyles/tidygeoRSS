@@ -115,6 +115,7 @@ geo_rss_parse <- function(response, list, clean_tags, parse_dates) {
       )
 
     # clean up
+    meta <- parsed$meta
     meta <- clean_up(meta, "rss", clean_tags, parse_dates)
     entries <- clean_up(entries, "rss", clean_tags, parse_dates) %>%
       st_as_sf()

@@ -32,7 +32,6 @@
 tidygeo <- function(feed, config = list(), clean_tags = TRUE, list = FALSE,
                     parse_dates = TRUE) {
   # checks
-  # checks
   if (!identical(length(feed), 1L)) stop("Please supply only one feed at a time.")
   if (!is.logical(list)) stop("`list` may be FALSE or TRUE only.")
   if (!is.logical(clean_tags)) stop("`clean_tags` may be FALSE or TRUE only.")
