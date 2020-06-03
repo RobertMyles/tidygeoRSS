@@ -1,3 +1,5 @@
+# tidygeoRSS v0.0.1
+
 ## Test environments
 * local OS X install, R 4.0.0
 * win-builder (devel and release)
