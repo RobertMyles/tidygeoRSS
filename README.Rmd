@@ -11,6 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+options(warn=-1)
 ```
 
 # tidygeoRSS 🌎 🌍 🌏
@@ -32,7 +33,7 @@ You can install the released version of tidygeoRSS from [CRAN](https://CRAN.R-pr
 install.packages("tidygeoRSS")
 ```
 
-And the development version from [GitHub](https://github.com/) with:
+And the development version from [GitHub](https://github.com/RobertMyles/tidygeoRSS) with:
 
 ```{r eval = FALSE}
 # install.packages("remotes")
@@ -42,4 +43,24 @@ remotes::install_github("RobertMyles/tidygeoRSS")
 ### Installing sf
 
 tidygeoRSS relies on sf, which also relies on some system dependencies, so you will most likely have to install certain things before using tidygeoRSS. More information is available [here](https://r-spatial.github.io/sf/index.html#installing). 
+
+## Usage
+
+### geoJSON example
+```{r}
+library(tidygeoRSS)
+tidygeo("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson")
+```
+
+### geo-Atom example
+
+```{r}
+tidygeo("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom")
+```
+
+### geoRSS example
+
+```{r}
+tidygeo("http://www.geograph.org.uk/syndicator.php?format=GeoRSS")
+```
 

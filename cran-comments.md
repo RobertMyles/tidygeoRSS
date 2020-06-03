@@ -1,7 +1,9 @@
 ## Test environments
-* local OS X install, R 3.6.2
-* ubuntu 14.04 (on travis-ci), R 3.6.2
+* local OS X install, R 4.0.0
 * win-builder (devel and release)
+* Fedora Linux, R-devel
+* Ubuntu Linux 16.04 LTS, R-release
+* Windows Server 2008 R2 SP1, R-devel
 
 ## R CMD check results
 

@@ -55,7 +55,6 @@ tidygeo <- function(feed, config = list(), clean_tags = TRUE, list = FALSE,
   } else {
     stop(error_msg)
   }
-  # geojson is already sf-ified
-  # atom & rss need it here
+  res <- st_as_sf(res)
   return(res)
 }
