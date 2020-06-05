@@ -27,6 +27,9 @@ These will be combined in a named list.}
 If \code{TRUE}, tidyRSS will attempt to parse columns that contain
 datetime values, although this may fail, see note.}
 }
+\value{
+A data frame of class "sf", "tbl_df", "tbl" and "data.frame".
+}
 \description{
 Extract a tidy data frame from geoRSS, geo-Atom and geoJSON feeds
 }
@@ -36,4 +39,7 @@ dates. This can fail, as can be seen in tidyRSS
 \href{https://github.com/RobertMyles/tidyRSS/issues/37}{here}. If you need
 lower-level control over the parsing of dates, it's better to leave
 \code{parse_dates} equal to \code{FALSE} and then parse these yourself.
+}
+\examples{
+\dontrun{tidygeo("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom")}
 }

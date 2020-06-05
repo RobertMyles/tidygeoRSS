@@ -22,7 +22,7 @@ The idea of tidygeoRSS is to parse 'geo' feeds -- RSS, Atom and JSON -- and retu
 
 For more information on these formats, see: 
 
-- geo-RSS & geo-Atom: [http://www.georss.org/](http://www.georss.org/)  
+- geoRSS & geoAtom: [http://www.georss.org/](http://www.georss.org/)  
 - geoJSON: [https://geojson.org/](https://geojson.org/)
 
 ## Installation

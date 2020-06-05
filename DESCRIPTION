@@ -1,6 +1,6 @@
 Package: tidygeoRSS
 Type: Package
-Title: Tidy Geo-RSS for R
+Title: Tidy GeoRSS
 Version: 0.0.1
 Author: Robert Myles McDonnell
 Maintainer: Robert Myles McDonnell <robertmylesmcdonnell@gmail.com>

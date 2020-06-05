@@ -28,6 +28,8 @@
 #' \href{https://github.com/RobertMyles/tidyRSS/issues/37}{here}. If you need
 #' lower-level control over the parsing of dates, it's better to leave
 #' \code{parse_dates} equal to \code{FALSE} and then parse these yourself.
+#' @examples \dontrun{tidygeo("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom")}
+#' @return A data frame of class "sf", "tbl_df", "tbl" and "data.frame".
 #' @export
 tidygeo <- function(feed, config = list(), clean_tags = TRUE, list = FALSE,
                     parse_dates = TRUE) {
