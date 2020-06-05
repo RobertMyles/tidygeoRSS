@@ -4,6 +4,7 @@
 # tidygeoRSS 🌎 🌍 🌏
 
 ![R-CMD-check](https://github.com/RobertMyles/tidygeoRSS/workflows/R-CMD-check/badge.svg)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/tidygeoRSS)](https://cran.r-project.org/package=tidygeoRSS)
 
 The idea of tidygeoRSS is to parse ‘geo’ feeds – RSS, Atom and JSON –
 and return them as tibbles complete with the geographical information in
@@ -50,16 +51,16 @@ tidygeo("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojs
 #> # A tibble: 39 x 30
 #>    feed_title feed_url time_generated id      mag place    time updated url  
 #>    <chr>      <chr>             <dbl> <chr> <dbl> <chr>   <dbl>   <dbl> <chr>
-#>  1 USGS Magn… https:/…  1591351936000 ak02…  2.5  "40 … 1.59e12 1.59e12 http…
-#>  2 USGS Magn… https:/…  1591351936000 pr20…  2.58 "12 … 1.59e12 1.59e12 http…
-#>  3 USGS Magn… https:/…  1591351936000 us60…  5.2  "128… 1.59e12 1.59e12 http…
-#>  4 USGS Magn… https:/…  1591351936000 us60…  4.1  "107… 1.59e12 1.59e12 http…
-#>  5 USGS Magn… https:/…  1591351936000 pr20…  2.85 "2 k… 1.59e12 1.59e12 http…
-#>  6 USGS Magn… https:/…  1591351936000 us60…  5.1  "198… 1.59e12 1.59e12 http…
-#>  7 USGS Magn… https:/…  1591351936000 us60…  3.2  "12 … 1.59e12 1.59e12 http…
-#>  8 USGS Magn… https:/…  1591351936000 us60…  4.5  "50 … 1.59e12 1.59e12 http…
-#>  9 USGS Magn… https:/…  1591351936000 us60…  4.5  "54 … 1.59e12 1.59e12 http…
-#> 10 USGS Magn… https:/…  1591351936000 us60…  4.1  "9 k… 1.59e12 1.59e12 http…
+#>  1 USGS Magn… https:/…  1591352536000 ak02…  2.5  "40 … 1.59e12 1.59e12 http…
+#>  2 USGS Magn… https:/…  1591352536000 pr20…  2.58 "12 … 1.59e12 1.59e12 http…
+#>  3 USGS Magn… https:/…  1591352536000 us60…  5.2  "128… 1.59e12 1.59e12 http…
+#>  4 USGS Magn… https:/…  1591352536000 us60…  4.1  "107… 1.59e12 1.59e12 http…
+#>  5 USGS Magn… https:/…  1591352536000 pr20…  2.85 "2 k… 1.59e12 1.59e12 http…
+#>  6 USGS Magn… https:/…  1591352536000 us60…  5.1  "198… 1.59e12 1.59e12 http…
+#>  7 USGS Magn… https:/…  1591352536000 us60…  3.2  "12 … 1.59e12 1.59e12 http…
+#>  8 USGS Magn… https:/…  1591352536000 us60…  4.5  "50 … 1.59e12 1.59e12 http…
+#>  9 USGS Magn… https:/…  1591352536000 us60…  4.5  "54 … 1.59e12 1.59e12 http…
+#> 10 USGS Magn… https:/…  1591352536000 us60…  4.1  "9 k… 1.59e12 1.59e12 http…
 #> # … with 29 more rows, and 21 more variables: detail <chr>, felt <int>,
 #> #   cdi <dbl>, mmi <dbl>, alert <chr>, status <chr>, tsunami <int>, sig <int>,
 #> #   net <chr>, code <chr>, ids <chr>, sources <chr>, types <chr>, nst <int>,
@@ -72,28 +73,31 @@ tidygeo("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojs
 ``` r
 tidygeo("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom")
 #> GET request successful. Parsing...
-#> Simple feature collection with 21 features and 13 fields
+#> Simple feature collection with 14 features and 13 fields
 #> geometry type:  POINT
 #> dimension:      XY
-#> bbox:           xmin: 33.4875 ymin: -149.9918 xmax: 64.6012 ymax: -116.7947
+#> bbox:           xmin: 35.621 ymin: -149.9918 xmax: 64.6012 ymax: -117.4023
 #> CRS:            NA
-#> # A tibble: 21 x 14
+#> # A tibble: 14 x 14
 #>    feed_title feed_url feed_last_updated   feed_author feed_link feed_icon
 #>    <chr>      <chr>    <dttm>              <chr>       <chr>     <chr>    
-#>  1 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#>  2 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#>  3 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#>  4 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#>  5 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#>  6 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#>  7 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#>  8 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#>  9 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#> 10 USGS All … https:/… 2020-06-05 09:12:34 U.S. Geolo… https://… https://…
-#> # … with 11 more rows, and 8 more variables: entry_title <chr>,
-#> #   entry_url <chr>, entry_last_updated <dttm>, entry_link <chr>,
-#> #   entry_summary <chr>, entry_category <list>, entry_latlon <POINT>,
-#> #   entry_elev <dbl>
+#>  1 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#>  2 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#>  3 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#>  4 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#>  5 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#>  6 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#>  7 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#>  8 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#>  9 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#> 10 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#> 11 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#> 12 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#> 13 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#> 14 USGS All … https:/… 2020-06-05 09:22:42 U.S. Geolo… https://… https://…
+#> # … with 8 more variables: entry_title <chr>, entry_url <chr>,
+#> #   entry_last_updated <dttm>, entry_link <chr>, entry_summary <chr>,
+#> #   entry_category <list>, entry_latlon <POINT>, entry_elev <dbl>
 ```
 
 ### geoRSS example

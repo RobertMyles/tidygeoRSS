@@ -17,6 +17,7 @@ options(warn=-1)
 # tidygeoRSS 🌎 🌍 🌏
 
 ![R-CMD-check](https://github.com/RobertMyles/tidygeoRSS/workflows/R-CMD-check/badge.svg)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/tidygeoRSS)](https://cran.r-project.org/package=tidygeoRSS)
 
 The idea of tidygeoRSS is to parse 'geo' feeds -- RSS, Atom and JSON -- and return them as tibbles complete with the geographical information in a way that is compatible with the [sf](https://r-spatial.github.io/sf/articles/sf1.html) library. 
 
