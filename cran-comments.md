@@ -6,6 +6,8 @@ Fixed as per request:
 - added example ('# Not run' because of HTTP GET call)
 - removed redundant 'for R' from title.
 
+- (2020-06-09): removed 'geo-RSS' from DESCRIPTION and replaced with 'geo'. This removes the usage of both 'geoRSS' and 'geo-RSS', and makes it clearer that the package is not only for RSS, but Atom and JSON feeds too.
+
 ## Test environments
 * local OS X install, R 4.0.0
 * win-builder (devel and release)
